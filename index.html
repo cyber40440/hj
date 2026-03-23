@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cyber-Bot: Massive Brain</title>
+    <style>
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        #chat-container { border: 2px solid #00ff41; width: 90%; max-width: 500px; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px #00ff41; background: #000; position: relative; }
+        #display { height: 300px; overflow-y: auto; border-bottom: 1px solid #00ff41; margin-bottom: 15px; padding: 10px; font-size: 14px; }
+        .input-area { display: flex; gap: 10px; }
+        input { background: #000; border: 1px solid #00ff41; color: #00ff41; flex-grow: 1; padding: 12px; outline: none; }
+        button { background: #00ff41; color: #000; border: none; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+        button:hover { background: #fff; }
+        .user-line { color: #fff; margin-bottom: 5px; }
+        .ai-line { color: #00ff41; font-weight: bold; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+<div id="chat-container">
+    <h2 style="text-align: center; margin-top: 0;">CYBER-BRAIN v2.0</h2>
+    <div id="display">SYSTEM INITIALIZED... Type 'help' to see commands.</div>
+    <div class="input-area">
+        <input type="text" id="user-msg" placeholder="Enter command..." autocomplete="off">
+        <button id="btn">SEND</button>
+    </div>
+</div>
+
+<script>
+    // --- THE BIG BRAIN DATA ---
+    const brain = {
+        "hello": ["System online. Greetings.", "Hello! Logic circuits ready.", "Connection established."],
+        "joke": ["Why did the math book look sad? It had too many problems.", "What's an AI's favorite snack? Computer chips!"],
+        "pizza": ["Pizza is 100% compatible with my hardware.", "Data suggests pepperoni is the best topping."],
+        "roblox": ["Roblox is great! Do you like building or playing?", "Roblox uses Lua code!"],
+        "space": ["Space is infinite. Mars is the Red Planet.", "The moon is 238,855 miles away."],
+        "coding": ["JavaScript is the language of the web!", "Coding is just logic and magic."],
+        "help": ["Try: 'joke', 'pizza', 'space', 'coding', or math like '10 + 10'."]
+    };
+
+    // --- THE BRAIN LOGIC ---
+    const btn = document.getElementById("btn");
+    const inputField = document.getElementById("user-msg");
+    const display = document.getElementById("display");
+
+    function process() {
+        const rawInput = inputField.value;
+        if (!rawInput) return;
+        const val = rawInput.toLowerCase().trim();
+        
+        let response = "";
+
+        // 1. Try Math
+        const mathMatch = val.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+        if (mathMatch) {
+            const n1 = parseFloat(mathMatch[1]), op = mathMatch[2], n2 = parseFloat(mathMatch[3]);
+            let res = (op==="+")?n1+n2 : (op==="-")?n1-n2 : (op==="*")?n1*n2 : (n2!==0?n1/n2:"Error");
+            response = "MATH RESULT: " + res;
+        }
+
+        // 2. Try Word Brain
+        if (!response) {
+            for (let t in brain) {
+                if (val.includes(t)) {
+                    response = "AI: " + brain[t][Math.floor(Math.random() * brain[t].length)];
+                    break;
+                }
+            }
+        }
+
+        if (!response) response = "AI: Command not recognized. Try 'help'.";
+
+        // Update Screen
+        display.innerHTML += `<div class="user-line">YOU: ${rawInput}</div>`;
+        display.innerHTML += `<div class="ai-line">${response}</div>`;
+        display.scrollTop = display.scrollHeight;
+        inputField.value = "";
+    }
+
+    btn.onclick = process;
+    inputField.onkeypress = (e) => { if(e.key === "Enter") process(); };
+</script>
+// 1. THE MASSIVE BRAIN (Pre-Loaded Knowledge)
+const brain = {
+    "hello": ["System online. Greetings.", "Hello! My logic circuits are ready.", "Connection established, human."],
+    "hi": ["Hey!", "Hello there!", "Greetings."],
+    "joke": [
+        "Why did the math book look sad? It had too many problems.",
+        "I asked my computer for a joke. It said: 'Windows is updating'.",
+        "What's a robot's favorite exercise? Circuit training!",
+        "How do you make a tissue dance? Put a little boogie in it!"
+    ],
+    "name": ["I am the Cyber-Bot 2.0.", "My name is your Offline Chromebook AI."],
+    "pizza": ["Pizza is the perfect fuel for binary minds.", "Data shows pizza is 100% delicious."],
+    "color": ["I like #00ff41 (Matrix Green)!", "Blue reminds me of a calm sky."],
+    "who": ["I am a JavaScript AI running entirely on your machine."],
+    "roblox": ["Roblox is great! Do you like Brookhaven or Adopt Me?", "Roblox uses Lua code!"],
+    "minecraft": ["Mining blocks is very therapeutic for an AI.", "Watch out for Creepers!"],
+    "science": ["Science is how we understand the universe.", "Physics, chemistry, and biology are the three main branches."],
+    "space": ["Space is infinite.", "Mars is known as the Red Planet.", "Black holes are regions where gravity is super strong."],
+    "coding": ["Coding is just giving instructions to a computer.", "I am written in JavaScript!"],
+    "history": ["History is the study of the past.", "Humans first walked on the moon in 1969."],
+    "bye": ["Goodbye!", "See you in the next session.", "Have a great day!"],
+    "help": ["I can: 1. Chat about Space, Coding, History. 2. Do math (5*5). 3. Learn new things! Use 'Learn: [word] is [fact]'"]
+};
+
+// 2. THE LEARN & MEMORY ENGINE
+function checkLearningAndMemory(input) {
+    const val = input.toLowerCase();
+
+    // TEACHING MODE: "Learn: [trigger] is [response]"
+    if (val.startsWith("learn:")) {
+        const parts = val.replace("learn:", "").split(" is ");
+        if (parts.length === 2) {
+            const trigger = parts[0].trim();
+            const response = parts[1].trim();
+            
+            // Save to LocalStorage
+            let customBrain = JSON.parse(localStorage.getItem("customBrain") || "{}");
+            customBrain[trigger] = [response];
+            localStorage.setItem("customBrain", JSON.stringify(customBrain));
+            
+            return "SUCCESS: I have learned that " + trigger + " is " + response + "!";
+        }
+        return "ERROR: To teach me, type: 'Learn: [word] is [fact]'";
+    }
+
+    // CHECK SAVED NAME
+    if (val.includes("my name is")) {
+        const name = input.split("my name is ")[1];
+        localStorage.setItem("savedName", name);
+        return "MEMORY UPDATED: I will remember you, " + name + ".";
+    }
+    if (val.includes("what is my name")) {
+        const saved = localStorage.getItem("savedName");
+        return saved ? "YOUR IDENTITY: You are " + saved + "." : "I don't know you yet! Say 'My name is [name]'.";
+    }
+    return null;
+}
+
+// 3. THE MATH ENGINE
+function solveMath(input) {
+    const match = input.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+    if (match) {
+        const n1 = parseFloat(match[1]), op = match[2], n2 = parseFloat(match[3]);
+        let res;
+        if (op === "+") res = n1 + n2;
+        else if (op === "-") res = n1 - n2;
+        else if (op === "*") res = n1 * n2;
+        else if (op === "/") res = n2 !== 0 ? n1 / n2 : "Infinity";
+        return "MATH RESULT: " + res;
+    }
+    return null;
+}
+
+// 4. MAIN PROCESSING
+const btn = document.getElementById("btn");
+const inputField = document.getElementById("user-msg");
+const display = document.getElementById("display");
+
+function process() {
+    const rawInput = inputField.value;
+    if (!rawInput) return;
+    const val = rawInput.toLowerCase().trim();
+    
+    // Check Memory/Learning First, then Math
+    let response = checkLearningAndMemory(rawInput) || solveMath(val);
+
+    if (!response) {
+        // Check Custom Brain (Things you taught it)
+        const customBrain = JSON.parse(localStorage.getItem("customBrain") || "{}");
+        const inputWords = val.split(" ");
+        
+        for (let word of inputWords) {
+            if (customBrain[word]) {
+                response = "SAVED KNOWLEDGE: " + customBrain[word][0];
+                break;
+            }
+            if (brain[word]) {
+                response = "AI: " + brain[word][Math.floor(Math.random() * brain[word].length)];
+                break;
+            }
+        }
+    }
+
+    if (!response) response = "AI: DATA NOT FOUND. Use 'Learn:' to teach me about this!";
+
+    display.innerHTML += `<p><span style="color:#fff">YOU:</span> ${rawInput}<br>${response}</p>`;
+    display.scrollTop = display.scrollHeight;
+    inputField.value = "";
+}
+
+btn.onclick = process;
+inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") process(); });
+  
+</body>
+</html>
